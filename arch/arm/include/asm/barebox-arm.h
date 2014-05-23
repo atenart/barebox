@@ -31,6 +31,8 @@
 #include <linux/types.h>
 #include <linux/compiler.h>
 #include <asm/barebox-arm-head.h>
+#include <io.h>
+#include <sizes.h>
 
 /* cpu/.../cpu.c */
 int	cleanup_before_linux(void);
