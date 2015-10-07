@@ -10,9 +10,9 @@
 
 #include <asm/barebox-arm.h>
 #include <asm/barebox-arm-head.h>
+#include <linux/sizes.h>
 #include <common.h>
 #include <io.h>
-#include <sizes.h>
 
 #define SUNXI_BOOTUP_MEMORY_BASE	0x40000000
 #define SUNXI_BOOTUP_MEMORY_SIZE	SZ_64M
