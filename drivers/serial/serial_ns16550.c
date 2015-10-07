@@ -294,16 +294,6 @@ static void ns16550_probe_dt(struct device_d *dev, struct ns16550_priv *priv)
 		of_property_read_u32(np, "clock-frequency", &priv->plat.clock);
 }
 
-static void ns16550_probe_ptfm(struct device_d *dev, struct ns16550_priv *priv)
-{
-	struct NS16550_plat *plat = (struct NS16550_plat *)dev->platform_data;
-
-	priv->plat = *plat;
-
-	if (plat->flags & NS16650_FLAG_DISABLE_FIFO)
-		priv->fcrval &= ~FCR_FIFO_EN;
-}
-
 static struct ns16550_drvdata ns16450_drvdata = {
 	.init_port = ns16450_serial_init_port,
 	.linux_console_name = "ttyS",
@@ -414,7 +404,6 @@ static int ns16550_probe(struct device_d *dev)
 		devtype = &ns16550_drvdata;
 
 	priv = xzalloc(sizeof(*priv));
-	priv->fcrval = FCRVAL;
 
 	ret = ns16550_init_iomem(dev, priv);
 	if (ret)
@@ -423,9 +412,7 @@ static int ns16550_probe(struct device_d *dev)
 	if (ret)
 		return ret;
 
-	if (dev->platform_data) {
-		ns16550_probe_ptfm(dev, priv);
-	} else if (dev->device_node) {
+	if (dev->device_node) {
 		ns16550_probe_dt(dev, priv);
 	} else {
 		ret = -ENODEV;
