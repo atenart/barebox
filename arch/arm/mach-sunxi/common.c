@@ -12,6 +12,20 @@
 #include <common.h>
 #include <init.h>
 #include <io.h>
+#include <linux/clk.h>
+
+#include <mach/debug_ll.h>
+
+#if 0
+#include <ns16550.h>
+#include <linux/clkdev.h>
+
+#define CONSOLE_UART_BASE		0x01c28000
+
+static struct NS16550_plat uart_plat = {
+	.shift = 2,
+};
+#endif
 
 void __noreturn reset_cpu(unsigned long addr)
 {
@@ -31,9 +45,6 @@ static int sunxi_init_soc(void)
 	tclk = clk_fixed("tclk", 24000000);
 	clkdev_add_physbase(tclk, (unsigned int)0x01c20c00, NULL);
 
-	arm_add_mem_device("ram0", (unsigned long)SUNXI_BOOTUP_MEMORY_BASE,
-			   SZ_512M);
-
 	uart_plat.clock = clk_get_rate(tclk);
 	add_ns16550_device(DEVICE_ID_DYNAMIC,
 			   (unsigned int)CONSOLE_UART_BASE, 0x400,
@@ -41,6 +52,8 @@ static int sunxi_init_soc(void)
 			   &uart_plat);
 #endif
 	/* All is parsed from DT */
+
+	PUTC_LL('a');
 
 	return 0;
 }

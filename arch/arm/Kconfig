@@ -181,8 +181,6 @@ config ARCH_SUNXI
 	select CLKDEV_LOOKUP
 	select CPU_V7
 	select HAS_DEBUG_LL
-	select OFDEVICE
-	select OFTREE
 
 config ARCH_S3C24xx
 	bool "Samsung S3C2410, S3C2440"

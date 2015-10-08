@@ -129,7 +129,6 @@ static inline void image_set_##x(image_header_t *hdr, uint32_t val)	\
 	hdr->ih_##x = cpu_to_uimage(val);				\
 }
 
-image_set_hdr_u32(magic);	/* image_set_magic */
 image_set_hdr_u32(hcrc);	/* image_set_hcrc */
 image_set_hdr_u32(time);	/* image_set_time */
 image_set_hdr_u32(size);	/* image_set_size */
@@ -459,12 +458,12 @@ NXTARG:		;
 		 */
 		memcpy (hdr, ptr, sizeof(image_header_t));
 
-		if (image_get_magic(hdr) != IH_MAGIC) {
-			fprintf (stderr,
-				"%s: Bad Magic Number: \"%s\" is no valid image\n",
-				cmdname, imagefile);
-			exit (EXIT_FAILURE);
-		}
+		//if (image_get_magic(hdr) != IH_MAGIC) {
+		//	fprintf (stderr,
+	//			"%s: Bad Magic Number: \"%s\" is no valid image\n",
+	//			cmdname, imagefile);
+	//		exit (EXIT_FAILURE);
+	//	}
 
 		data = (char *)hdr;
 		len  = image_get_header_size();
@@ -600,7 +599,7 @@ NXTARG:		;
 			 );
 
 	/* Build new header */
-	image_set_magic(hdr, IH_MAGIC);
+	memcpy(&hdr->ih_magic, IH_MAGIC, 8);					\
 	image_set_time(hdr, sbuf.st_mtime);
 	image_set_size(hdr, sbuf.st_size - image_get_header_size());
 	image_set_load(hdr, addr);

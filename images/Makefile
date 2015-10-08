@@ -110,7 +110,6 @@ include $(srctree)/images/Makefile.mxs
 include $(srctree)/images/Makefile.omap3
 include $(srctree)/images/Makefile.rockchip
 include $(srctree)/images/Makefile.socfpga
-include $(srctree)/images/Makefile.sunxi
 include $(srctree)/images/Makefile.tegra
 
 targets += $(image-y) pbl.lds barebox.x barebox.z
