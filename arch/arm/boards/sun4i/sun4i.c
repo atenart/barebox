@@ -43,5 +43,4 @@ static int sun4i_dram_init(void)
 {
 	return dramc_init(&dram_para);
 }
-
 mem_initcall(sun4i_dram_init);

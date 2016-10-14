@@ -177,8 +177,6 @@ config ARCH_SOCFPGA
 
 config ARCH_SUNXI
 	bool "Allwinner A1X SoCs"
-	select COMMON_CLK
-	select CLKDEV_LOOKUP
 	select CPU_V7
 	select HAS_DEBUG_LL
 

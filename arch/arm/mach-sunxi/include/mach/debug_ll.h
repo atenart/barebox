@@ -18,7 +18,7 @@
 
 #define UART_THR	0x00
 #define UART_LSR	0x14
-#define   LSR_THRE	BIT(5)
+#define  LSR_THRE	BIT(5)
 
 #ifdef CONFIG_DEBUG_SUNXI_UART0
 #define EARLY_UART	UARTn_BASE(0)

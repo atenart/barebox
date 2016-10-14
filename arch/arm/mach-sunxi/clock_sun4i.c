@@ -11,12 +11,13 @@
  */
 
 #include <common.h>
-#include <asm/io.h>
-#include <asm/arch/clock.h>
-#include <asm/arch/gpio.h>
-#include <asm/arch/sys_proto.h>
+#include <io.h>
+#include <mach/clock.h>
+#include <mach/clock_sun4i.h>
+#include <mach/cpu_sun4i.h>
 
-#ifdef CONFIG_SPL_BUILD
+#define CONFIG_CONS_INDEX	2
+
 void clock_init_safe(void)
 {
 	struct sunxi_ccm_reg * const ccm =
@@ -29,7 +30,7 @@ void clock_init_safe(void)
 	       CPU_CLK_SRC_OSC24M << CPU_CLK_SRC_SHIFT,
 	       &ccm->cpu_ahb_apb0_cfg);
 	writel(PLL1_CFG_DEFAULT, &ccm->pll1_cfg);
-	sdelay(200);
+	udelay(200);
 	writel(AXI_DIV_1 << AXI_DIV_SHIFT |
 	       AHB_DIV_2 << AHB_DIV_SHIFT |
 	       APB0_DIV_1 << APB0_DIV_SHIFT |
@@ -44,7 +45,6 @@ void clock_init_safe(void)
 	setbits_le32(&ccm->pll6_cfg, 0x1 << CCM_PLL6_CTRL_SATA_EN_SHIFT);
 #endif
 }
-#endif
 
 void clock_init_uart(void)
 {
@@ -81,7 +81,6 @@ int clock_twi_onoff(int port, int state)
 	return 0;
 }
 
-#ifdef CONFIG_SPL_BUILD
 #define PLL1_CFG(N, K, M, P)	( 1 << CCM_PLL1_CFG_ENABLE_SHIFT | \
 				  0 << CCM_PLL1_CFG_VCO_RST_SHIFT |  \
 				  8 << CCM_PLL1_CFG_VCO_BIAS_SHIFT | \
@@ -160,7 +159,7 @@ void clock_set_pll1(unsigned int hz)
 	       APB0_DIV_1 << APB0_DIV_SHIFT |
 	       CPU_CLK_SRC_OSC24M << CPU_CLK_SRC_SHIFT,
 	       &ccm->cpu_ahb_apb0_cfg);
-	sdelay(20);
+	udelay(20);
 
 	/* Configure sys clock divisors */
 	writel(axi << AXI_DIV_SHIFT |
@@ -171,7 +170,7 @@ void clock_set_pll1(unsigned int hz)
 
 	/* Configure PLL1 at the desired frequency */
 	writel(pll1_para[i].pll1_cfg, &ccm->pll1_cfg);
-	sdelay(200);
+	udelay(200);
 
 	/* Switch CPU to PLL1 */
 	writel(axi << AXI_DIV_SHIFT |
@@ -179,9 +178,8 @@ void clock_set_pll1(unsigned int hz)
 	       apb0 << APB0_DIV_SHIFT |
 	       CPU_CLK_SRC_PLL1 << CPU_CLK_SRC_SHIFT,
 	       &ccm->cpu_ahb_apb0_cfg);
-	sdelay(20);
+	udelay(20);
 }
-#endif
 
 void clock_set_pll3(unsigned int clk)
 {
@@ -198,6 +196,7 @@ void clock_set_pll3(unsigned int clk)
 	       CCM_PLL3_CTRL_M(clk / 3000000), &ccm->pll3_cfg);
 }
 
+#if 0
 unsigned int clock_get_pll5p(void)
 {
 	struct sunxi_ccm_reg *const ccm =
@@ -218,6 +217,7 @@ unsigned int clock_get_pll6(void)
 	int k = ((rval & CCM_PLL6_CTRL_K_MASK) >> CCM_PLL6_CTRL_K_SHIFT) + 1;
 	return 24000000 * n * k / 2;
 }
+#endif
 
 void clock_set_de_mod_clock(u32 *clk_cfg, unsigned int hz)
 {
